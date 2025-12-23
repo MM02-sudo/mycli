@@ -1,1 +1,2 @@
 
+ls | list files and folder in current directory

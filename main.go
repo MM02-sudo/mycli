@@ -30,6 +30,11 @@ func main()  {
 	command := os.Args[1]
 	fmt.Printf("You ran: %s\n", command)
 
+
+
+
+
+
 	// here we see if the command is valid
 	switch command {
 	case "add":
@@ -72,16 +77,59 @@ func main()  {
 		}
 		fmt.Println("Command added succesfully!")
 
+
+
+
 	case "search":
 		fmt.Println("Search command - not implemented yet")
 
 
+
+
+
+
+
+
+
+
+
 	case "list":
-		fmt.Println("List command - not implemented yet")
+		filename:= "command.txt"
+		
+		//checks if file exists
+		if _, err := os.Stat(filename); os.IsNotExist(err){
+			fmt.Println("This file does not exist, use add command to create file")
+			os.Exit(0)
+		}
 
 
+		//reading entire file
+		content, err := os.ReadFile(filename)
+		if err != nil{
+			fmt.Println("Error reding file:", err)
+			os.Exit(1)
+		}
 
 
+		//converintg bytes to string and split by newline
+		lines:= strings.Split(string(content), "\n")
+
+		// Display each command with a number
+		fmt.Println("\nYour saved commands:")
+		fmt.Println("-------------------")
+		count := 1
+		for _, line := range lines{
+			if line == ""{
+				continue
+			}
+			//split each line by | to get command and descritpion
+			parts := strings.Split(line, " | ")
+			if len(parts) == 2{
+				fmt.Printf("[%d] %s\n", count, parts[0])
+				fmt.Printf("    Descritpion: %s\n\n", parts[1])
+				count++
+			}
+		}
 
 
 
