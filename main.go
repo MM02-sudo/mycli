@@ -10,6 +10,34 @@ import(
 
 
 func main()  {
+	//this first 3 section allow us to use the program everywhere we are
+	// we also need to run go build -o mycli to create an executable, and then move it to /usr/local/bin/
+	// get command file path
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println("Error getting home directory")
+		os.Exit(1)
+	}
+
+	
+	// creates .mycli directory if it does not exist
+	configDir:= homeDir + "/.mycli"
+	err = os.MkdirAll(configDir, 0755)
+	if err != nil{
+		fmt.Println("Error creating config Directory:", err)
+		os.Exit(1)
+	}
+
+	// file path used every where
+	filename := configDir + "/commands.txt"
+
+	// what we have done:
+	// homeDir         = /home/yourname
+	//configDir       = /home/yourname/.mycli
+	//filename        = /home/yourname/.mycli/commands.txt
+
+
+
 	//this checks if user wrote nothing after the program name
 	//And shows how to use the program
 	
@@ -61,7 +89,6 @@ func main()  {
 		entry := commandText + " | " + description
 
 		//open or create a file for appending command
-		filename:= "command.txt"
 		file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil{
 			fmt.Println("Error while opening file:", err)
@@ -93,9 +120,7 @@ func main()  {
 
 
 
-	case "list":
-		filename:= "command.txt"
-		
+	case "list":		
 		//checks if file exists
 		if _, err := os.Stat(filename); os.IsNotExist(err){
 			fmt.Println("This file does not exist, use add command to create file")
