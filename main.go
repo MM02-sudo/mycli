@@ -94,6 +94,7 @@ func main()  {
 			fmt.Println("Error while opening file:", err)
 			os.Exit(1)
 		}
+		// defer allows me to not have to write file.Colose() everywhere
 		defer file.Close()
 
 		// write entry to the file
@@ -108,7 +109,58 @@ func main()  {
 
 
 	case "search":
-		fmt.Println("Search command - not implemented yet")
+		if len(os.Args)<3{
+			fmt.Println("you did not provide any word")
+			fmt.Println("type: mycli search 'word'")
+			os.Exit(1)
+
+		}
+		searchTerm:= strings.ToLower(os.Args[2])
+
+
+
+		// lets read the entire file
+		content, err:= os.ReadFile(filename)
+		if err!= nil{
+			fmt.Println("Error while reading file,", err)
+			os.Exit(1)
+		}
+
+		// converting bytes in to string and split by new lines
+		lines:= strings.Split(string(content), "\n")
+
+		//Display header
+		fmt.Println("\nSearch results:")
+		fmt.Println("----------------")
+
+
+		// lets loop through the lines while ignoring spaces
+		count := 1
+		found := false
+		for _, line := range lines{
+			if line ==""{
+				continue
+			}
+		// Split each line by | to get command and description
+			parts := strings.Split(line, " | ")
+			if len(parts)== 2{
+				//Check if search term is in command OR description (case-insensitive)
+				commandLower := strings.ToLower(parts[0])
+				descriptionLower:= strings.ToLower(parts[1])
+
+				if strings.Contains(commandLower, searchTerm) || strings.Contains(descriptionLower, searchTerm){
+					fmt.Printf("[%d] %s\n", count, parts[0])
+					fmt.Printf("    Descritpion: %s\n\n", parts[1])
+					count++
+					found = true
+				}
+			}
+		}
+
+		if !found {
+			fmt.Println("No command found matching:", os.Args[2])
+		}
+
 
 
 
@@ -136,7 +188,7 @@ func main()  {
 		}
 
 
-		//converintg bytes to string and split by newline
+		//converintg bytes to string and split by new line
 		lines:= strings.Split(string(content), "\n")
 
 		// Display each command with a number
