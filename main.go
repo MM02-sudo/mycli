@@ -5,6 +5,7 @@ import(
 	"os"
 	"bufio"
 	"strings"
+	"strconv"
 
 )
 
@@ -211,7 +212,33 @@ func main()  {
 
 
 	case "delete":
-		fmt.Println("delete command - not implemented yet")
+		if len(os.Args) < 3{
+			fmt.Println("No number provided")
+			fmt.Println("Usage : mycli delete <number>")
+			os.Exit(1)
+		}
+		// convering string to number. Ex mycli delete "3" this is a string not a number
+		deleteNum, err := strconv.Atoi(os.Args[2])
+		if err != nil{
+			fmt.Println("Invalid number. Please provide a number")
+			os.Exit(1)
+		}
+		content, err := os.ReadFile(filename)
+		if err != nil{
+			fmt.Println("Error while reding file")
+		os.Exit(1)
+		}
+
+		lines:=strings.Split(string(content), "\n")
+
+
+
+
+
+
+
+
+
 	default:
 		fmt.Println("Uknown command: %s\n", command)
 		os.Exit(1)
