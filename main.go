@@ -217,19 +217,59 @@ func main()  {
 			fmt.Println("Usage : mycli delete <number>")
 			os.Exit(1)
 		}
+
+
 		// convering string to number. Ex mycli delete "3" this is a string not a number
 		deleteNum, err := strconv.Atoi(os.Args[2])
 		if err != nil{
 			fmt.Println("Invalid number. Please provide a number")
 			os.Exit(1)
 		}
+
+
 		content, err := os.ReadFile(filename)
 		if err != nil{
 			fmt.Println("Error while reding file")
 		os.Exit(1)
 		}
 
+
+
 		lines:=strings.Split(string(content), "\n")
+
+
+		//build a list of non empty lines
+		var validLines []string
+		for _,line := range lines {
+			if line != ""{
+				validLines = append(validLines, line)
+			}
+		}
+
+		// check if number is valid
+		if deleteNum < 1 || deleteNum > len(validLines){
+			fmt.Println("Invalid number. You have", len(validLines), "commands.")
+			os.Exit(1)
+		}
+
+		// remove line
+		numToDelete := deleteNum - 1
+		validLines = append(validLines[:numToDelete], validLines[numToDelete+1:]...)
+
+
+		// Join lines back together with newlines
+		newContent := strings.Join(validLines, "\n") + "\n"
+
+		// overriting file complitely
+		err = os.WriteFile(filename, []byte(newContent), 0644)
+		if err != nil{
+			fmt.Println("Error writing file:", err)
+			os.Exit(1)
+		}
+		fmt.Println("Command deleted succesfully")
+
+
+	
 
 
 
