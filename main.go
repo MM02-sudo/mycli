@@ -44,9 +44,8 @@ func main()  {
 	
 	if len(os.Args)<2{
 		fmt.Println("Usage: mycli <command>")
-		fmt.Println("command:")
+		fmt.Println("commands:")
 		fmt.Println("  add    - Add new command")
-		fmt.Println("write description")
 		fmt.Println("  search - Search for commands")
 		fmt.Println("  list   - List all commands")
 		fmt.Println("  delete - Delete command")
@@ -57,10 +56,6 @@ func main()  {
 	}
 
 	command := os.Args[1]
-	fmt.Printf("You ran: %s\n", command)
-
-
-
 
 
 
@@ -164,15 +159,6 @@ func main()  {
 
 
 
-
-
-
-
-
-
-
-
-
 	case "list":		
 		//checks if file exists
 		if _, err := os.Stat(filename); os.IsNotExist(err){
@@ -254,7 +240,7 @@ func main()  {
 
 		// remove line
 		numToDelete := deleteNum - 1
-		validLines = append(validLines[:numToDelete], validLines[numTorelete+1:]...)
+		validLines = append(validLines[:numToDelete], validLines[numToDelete+1:]...)
 
 
 		// Join lines back together with newlines
