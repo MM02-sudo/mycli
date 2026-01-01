@@ -219,7 +219,7 @@ func main()  {
 		}
 
 
-		// convering string to number. Ex mycli delete "3" this is a string not a number
+		// convering string to number. Ex mycli delete "3" this is a string not an int
 		deleteNum, err := strconv.Atoi(os.Args[2])
 		if err != nil{
 			fmt.Println("Invalid number. Please provide a number")
@@ -254,29 +254,24 @@ func main()  {
 
 		// remove line
 		numToDelete := deleteNum - 1
-		validLines = append(validLines[:numToDelete], validLines[numToDelete+1:]...)
+		validLines = append(validLines[:numToDelete], validLines[numTorelete+1:]...)
 
 
 		// Join lines back together with newlines
 		newContent := strings.Join(validLines, "\n") + "\n"
 
 		// overriting file complitely
+		// 0644 means 6 owner can read 4 + 2 write =6 
+		// group 4 = can only read
+		// others  4 = can only read
+
+
 		err = os.WriteFile(filename, []byte(newContent), 0644)
 		if err != nil{
 			fmt.Println("Error writing file:", err)
 			os.Exit(1)
 		}
 		fmt.Println("Command deleted succesfully")
-
-
-	
-
-
-
-
-
-
-
 
 
 	default:
