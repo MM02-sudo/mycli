@@ -49,6 +49,7 @@ func main()  {
 		fmt.Println("  search - Search for commands")
 		fmt.Println("  list   - List all commands")
 		fmt.Println("  delete - Delete command")
+		fmt.Println("  edit   - Edit command")
 
 		// Exit code 1 stops the program,since we did no enter
 		// a correct command
@@ -79,10 +80,16 @@ func main()  {
 		scanner:= bufio.NewScanner(os.Stdin)
 		if scanner.Scan() {
 			description = scanner.Text()
+		}
 			
+		fmt.Printf("enter tag: ")
+		var tag string
+
+		if scanner.Scan() {
+			tag = scanner.Text()
 		}
 		// formating command | description
-		entry := commandText + " | " + description
+		entry := commandText + " | " + description + " | " + tag
 
 		//open or create a file for appending command
 		file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
@@ -137,16 +144,23 @@ func main()  {
 			if line ==""{
 				continue
 			}
-		// Split each line by | to get command and description
+		// Split each line by | to get command and description or tag
 			parts := strings.Split(line, " | ")
-			if len(parts)== 2{
+			if len(parts)>= 2{
 				//Check if search term is in command OR description (case-insensitive)
 				commandLower := strings.ToLower(parts[0])
 				descriptionLower:= strings.ToLower(parts[1])
+				tagLower:=""
+				if len(parts)== 3{
+					tagLower = strings.ToLower(parts[2])
+				}
 
-				if strings.Contains(commandLower, searchTerm) || strings.Contains(descriptionLower, searchTerm){
+				if strings.Contains(commandLower, searchTerm) || strings.Contains(descriptionLower, searchTerm) || strings.Contains(tagLower, searchTerm){
 					fmt.Printf("[%d] %s\n", count, parts[0])
 					fmt.Printf("    Descritpion: %s\n\n", parts[1])
+					if len(parts) == 3 && parts[2] != ""{
+						fmt.Printf(" [%s]", parts[2])
+					}
 					count++
 					found = true
 				}
@@ -186,10 +200,15 @@ func main()  {
 			if line == ""{
 				continue
 			}
-			//split each line by | to get command and descritpion
+			//split each line by | to get command and descritpion and tag
 			parts := strings.Split(line, " | ")
-			if len(parts) == 2{
-				fmt.Printf("[%d] %s\n", count, parts[0])
+			if len(parts) >= 2{
+				if len(parts)==3 && parts[2]!=""{
+					fmt.Printf("[%d] %s [%s]\n", count, parts[0], parts[2])
+				}else{
+					fmt.Printf("[%d] %s\n", count, parts[0])
+				}
+
 				fmt.Printf("    Descritpion: %s\n\n", parts[1])
 				count++
 			}
@@ -264,6 +283,7 @@ func main()  {
 		fmt.Println("Uknown command: %s\n", command)
 		os.Exit(1)
 	}
+	
 
 
 }
